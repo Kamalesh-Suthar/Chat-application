@@ -26,3 +26,4 @@ dist-ssr
 # Other existing entries
 
 vite-env.d.ts
+.firebase
