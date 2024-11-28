@@ -1,15 +1,18 @@
-import userStore from "@/stores/userStore.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {useNavigate} from "react-router-dom";
+// import userStore from "@/stores/userStore.tsx";
+// import {Button} from "@/components/ui/button.tsx";
+// import {useNavigate} from "react-router-dom";
+import SidebarMenu from "@/components/navigation/Sidebar";
+import {SidebarProvider} from "@/components/ui/sidebar.tsx";
 
 const Home = () => {
-    const {user, signOut} = userStore()
-    const navigate = useNavigate();
+    // const {user, signOut} = userStore()
+    // const navigate = useNavigate();
     return (
-        <>
-            Welcome, {user && user.displayName}
-            {user ? <Button onClick={signOut}>Sign Out</Button> : <Button onClick={() => navigate('/signin')}>Sign In</Button> }
-        </>
+        <SidebarProvider>
+            <SidebarMenu>
+                Hello, Kamalesh
+            </SidebarMenu>
+        </SidebarProvider>
     );
 };
 
