@@ -13,7 +13,7 @@ app.use(express.json());
 const chatRoutes = require("./routes/chat");
 
 // Use routes
-app.use('/api/chat', chatRoutes);
+app.use('/chat', chatRoutes);
 
 // Health check route
 app.get('/', (req, res) => {
