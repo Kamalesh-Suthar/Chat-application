@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Health check route
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'API is running'
@@ -18,7 +18,7 @@ app.get('/api', (req, res) => {
 });
 
 // Example route
-app.get('/api/hello', (req, res) => {
+app.get('/hello', (req, res) => {
   res.json({
     message: 'Hello from the API!'
   });
