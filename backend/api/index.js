@@ -9,6 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Routes
+const chatRoutes = require("./routes/chat");
+
+// Use routes
+app.use('/api/chat', chatRoutes);
+
 // Health check route
 app.get('/', (req, res) => {
   res.status(200).json({
