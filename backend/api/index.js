@@ -1,24 +1,45 @@
 // backend/api/index.js
 const express = require('express');
 const cors = require('cors');
-const { createServer } = require('http');
 
+// Initialize express
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Basic health check route
+// Health check route
 app.get('/api', (req, res) => {
-  res.json({ status: 'API is running' });
+  res.status(200).json({
+    status: 'success',
+    message: 'API is running'
+  });
 });
 
-// Export handler for serverless function
-module.exports = app;
+// Example route
+app.get('/api/hello', (req, res) => {
+  res.json({
+    message: 'Hello from the API!'
+  });
+});
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const server = createServer(app);
-  socketHandler(server);
-  const PORT = process.env.PORT || 3000;
-  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    status: 'error',
+    message: 'Something went wrong!'
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Route not found'
+  });
+});
+
+// Export for Vercel
+module.exports = app;
