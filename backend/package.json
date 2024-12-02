@@ -2,8 +2,9 @@
   "name": "chat-application",
   "version": "1.0.0",
   "private": true,
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
+    "dev:local": "nodemon -r dotenv/config api/index.js",
     "dev": "vercel dev",
     "deploy": "vercel deploy"
   },
