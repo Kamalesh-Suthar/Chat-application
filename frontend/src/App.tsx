@@ -3,8 +3,8 @@ import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import Signup from "@/pages/Signup";
 import Signin from "@/pages/Signin";
 import Home from "@/pages/Home"
-import { ThemeProvider } from '@/providers/theme-provider.tsx';
-import ThemeToggle from '@/components/theme/mode.tsx';
+import { ThemeProvider } from '@/providers/theme-provider';
+import ThemeToggle from '@/components/theme/mode';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './providers/queryClient';
 

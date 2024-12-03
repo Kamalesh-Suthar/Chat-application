@@ -15,9 +15,9 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu.tsx";
-import userStore from "@/stores/userStore.tsx";
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import userStore from '@/stores/userStore';
 import {useNavigate} from "react-router-dom";
 
 // Menu items.
