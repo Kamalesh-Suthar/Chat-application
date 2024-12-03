@@ -1,6 +1,7 @@
 // backend/api/index.js
 const express = require('express');
 const cors = require('cors');
+const db = require("../models/db");
 
 // Initialize express
 const app = express();
@@ -11,17 +12,31 @@ app.use(express.json());
 
 // Routes
 const chatRoutes = require("./routes/chat");
+const User = require("../models/User");
 
 // Use routes
 app.use("/chat", chatRoutes);
 
 // Health check route
-app.get("/", (req, res) => {
-  console.log("API is running", process.env.CORS_ORIGIN);
+app.get("/", async (req, res) => {
   res.status(200).json({
     status: "success",
     message: "API is running",
   });
+});
+
+app.post("/register/google", async (req, res) => {
+  const { newUserData } = req.body;
+  const user = await User.findOne({ email: newUserData.email }).exec();
+  if (user) {
+    res.status(200).json(user);
+    return;
+  }
+  const newUser = new User({
+    newUserData,
+  });
+  await newUser.save();
+  res.status(201).json(newUser);
 });
 
 // Example route

@@ -1,95 +1,14 @@
-// import {FormEvent, useState} from 'react';
-// import { NavLink, useNavigate } from 'react-router-dom';
-// import {  createUserWithEmailAndPassword  } from 'firebase/auth';
-// import { auth } from '../../firebase';
-//
-// const Signup = () => {
-//     const navigate = useNavigate();
-//
-//     const [email, setEmail] = useState('')
-//     const [password, setPassword] = useState('');
-//
-//     const onSubmit = async (e: FormEvent) => {
-//         e.preventDefault()
-//
-//         await createUserWithEmailAndPassword(auth, email, password)
-//             .then((userCredential) => {
-//                 // Signed in
-//                 const user = userCredential.user;
-//                 console.log(user);
-//                 navigate("/login")
-//                 // ...
-//             })
-//             .catch((error) => {
-//                 const errorCode = error.code;
-//                 const errorMessage = error.message;
-//                 console.log(errorCode, errorMessage);
-//                 // ..
-//             });
-//
-//
-//     }
-//
-//     return (
-//         <main >
-//             <section>
-//                 <div>
-//                     <div>
-//                         <h1> FocusApp </h1>
-//                         <form onSubmit={onSubmit}>
-//                             <div>
-//                                 <label htmlFor="email-address">
-//                                     Email address
-//                                 </label>
-//                                 <input
-//                                     type="email"
-//                                     value={email}
-//                                     onChange={(e) => setEmail(e.target.value)}
-//                                     required
-//                                     placeholder="Email address"
-//                                 />
-//                             </div>
-//
-//                             <div>
-//                                 <label htmlFor="password">
-//                                     Password
-//                                 </label>
-//                                 <input
-//                                     type="password"
-//                                     value={password}
-//                                     onChange={(e) => setPassword(e.target.value)}
-//                                     required
-//                                     placeholder="Password"
-//                                 />
-//                             </div>
-//
-//                             <button
-//                                 type="submit"
-//
-//                             >
-//                                 Sign up
-//                             </button>
-//
-//                         </form>
-//
-//                         <p>
-//                             Already have an account?
-//                             <NavLink to="/login" >
-//                                 Sign in
-//                             </NavLink>
-//                         </p>
-//                     </div>
-//                 </div>
-//             </section>
-//         </main>
-//     )
-// }
-//
-// export default Signup
-
 import { signInWithGoogle } from '@/firebase.ts';
 import { Button } from '@/components/ui/button.tsx';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -99,7 +18,10 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card.tsx';
 import { Google } from '@mui/icons-material';
 import { Separator } from '@/components/ui/separator.tsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { User } from 'firebase/auth';
+import { endpoints } from '@/constants/api';
 
 const formSchema = z
     .object({
@@ -113,6 +35,44 @@ const formSchema = z
     });
 
 const SignUp = () => {
+    const navigate = useNavigate();
+
+    const googleSignInMutation = useMutation<User>({
+        mutationFn: async (userData) => {
+            try {
+                const response = await fetch(endpoints.googleRegister, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed');
+                }
+
+                return data;
+            } catch (error) {
+                throw error instanceof Error ? error : new Error('Registration failed');
+            }
+        },
+        onSuccess: (data) => {
+            // Store user data/token if needed
+            localStorage.setItem('user', JSON.stringify(data.user));
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+            navigate('/dashboard');
+        },
+        onError: (error) => {
+            console.error('Registration error:', error);
+            // Add toast notification here
+        },
+    });
+
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -120,7 +80,10 @@ const SignUp = () => {
     };
     const logGoogleUser = async () => {
         const response = await signInWithGoogle();
-        console.log(response);
+        if (response) {
+            const { user } = response;
+            googleSignInMutation.mutate(user);
+        }
     };
 
     // 1. Define your form.
