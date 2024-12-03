@@ -37,8 +37,8 @@ const formSchema = z
 const SignUp = () => {
     const navigate = useNavigate();
 
-    const googleSignInMutation = useMutation<User>({
-        mutationFn: async (userData) => {
+    const googleSignInMutation = useMutation<any, Error, User>({
+        mutationFn: async (userData: User) => {
             try {
                 const response = await fetch(endpoints.googleRegister, {
                     method: 'POST',
