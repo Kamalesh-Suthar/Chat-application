@@ -2,8 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 // Retrieve the API key from the environment variables
-const API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-const AUTH_DOMAIN = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN;
+const API_KEY = process.env.FIREBASE_API_KEY;
+const AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN;
 const PROJECT_ID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 const STORAGE_BUCKET = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 const MESSAGING_SENDER_ID =
