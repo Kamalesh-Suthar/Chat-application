@@ -87,7 +87,7 @@ h1 {
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 60% 40%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
@@ -125,6 +125,18 @@ h1 {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground items-center justify-center;
   }
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply bg-foreground-100 rounded-full
+	}
+
+	::-webkit-scrollbar-track {
+		@apply bg-transparent
+	}
 }

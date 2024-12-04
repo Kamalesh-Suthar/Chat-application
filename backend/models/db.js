@@ -6,10 +6,7 @@ const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "Chat";
 
 // Connect to MongoDB
 mongoose
-  .connect(`${MONGODB_URL}/${MONGODB_DB_NAME}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(`${MONGODB_URL}/${MONGODB_DB_NAME}`)
   .then(() => {
     console.log("Connected to MongoDB successfully");
   })

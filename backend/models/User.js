@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    phoneNumber: {
+      type: String,
+      default: null,
+    },
     displayName: {
       type: String,
       required: true,
@@ -38,6 +42,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema, "users");
 
 module.exports = User;

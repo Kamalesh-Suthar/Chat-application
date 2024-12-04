@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/card";
 import userStore from "@/stores/userStore";
 import { Eye, EyeOff } from "lucide-react";
+import { Google } from "@mui/icons-material";
+import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -65,7 +67,7 @@ const SignIn = () => {
   }
 
   return (
-    <Card>
+    <Card className="w-screen max-w-lg mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Signin</CardTitle>
         <CardDescription>
@@ -74,17 +76,12 @@ const SignIn = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className={
-              "flex flex-col w-full max-w-screen-lg space-y-2 justify-center gap-2.5 p-0"
-            }
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className={"grid gap-4"}>
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="grid gap-2">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="example@test.com" {...field} />
@@ -96,7 +93,7 @@ const SignIn = () => {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="grid gap-2">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <div
@@ -126,17 +123,26 @@ const SignIn = () => {
               Submit
             </Button>
           </form>
+          <Separator>OR</Separator>
+          <Button
+            fullWidth={true}
+            onClick={logGoogleUser}
+            variant={"outline"}
+            type={"button"}
+          >
+            <Google />
+            Continue With Google
+          </Button>
+          <p className="text-center text-sm mt-2">
+            Don't have an account?{" "}
+            <Link
+              href="/signup"
+              className="text-muted-foreground hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
         </Form>
-        <Button className={"w-full"} onClick={logGoogleUser}>
-          Continue With Google
-        </Button>
-        Don't have an account?{" "}
-        <Link
-          href="/signup"
-          className="text-sm text-muted-foreground hover:underline"
-        >
-          Sign up
-        </Link>
       </CardContent>
     </Card>
   );

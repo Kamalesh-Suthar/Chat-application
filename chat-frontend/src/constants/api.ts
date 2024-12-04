@@ -1,5 +1,5 @@
-const API_URL = process.env.API_URL || "http://localhost:3000/";
+const API_URL = "http://localhost:3000/";
 
 export const endpoints = {
-  googleRegister: `${API_URL}/auth/google`,
+  googleRegister: `${API_URL}register/google`,
 };

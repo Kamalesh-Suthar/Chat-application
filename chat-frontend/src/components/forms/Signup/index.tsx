@@ -17,7 +17,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Google } from "@mui/icons-material";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -25,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { User } from "firebase/auth";
 import { endpoints } from "@/constants/api";
+import userStore from "@/stores/userStore";
 
 const formSchema = z
   .object({
@@ -39,28 +46,22 @@ const formSchema = z
 
 const SignUp = () => {
   const router = useRouter();
-
+  const { signIn } = userStore();
   const googleSignInMutation = useMutation({
     mutationFn: async (userData: User) => {
-      try {
-        const response = await fetch(endpoints.googleRegister, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
-
-        if (!response.ok) {
-          throw new Error("Registration failed");
-        }
-
-        const data = await response.json();
-        router.push("/");
-        return data;
-      } catch (error) {
-        console.error("Registration error:", error);
-        throw error;
+      const response = await fetch(endpoints.googleRegister, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newUserData: userData }),
+      });
+      return response;
+    },
+    onSuccess: (res) => {
+      if (res.status === 200) {
+        signIn(res.json());
+        router.replace("/");
       }
     },
   });
@@ -78,7 +79,6 @@ const SignUp = () => {
     }
   };
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,103 +96,105 @@ const SignUp = () => {
   }
 
   return (
-    <Card
-      className={
-        "flex flex-col justify-center items-center m-auto h-fit w-4/12"
-      }
-    >
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className={
-            "flex flex-col w-full max-w-screen-lg space-y-2 justify-center gap-2.5"
-          }
-        >
-          <legend className={"font-bold text-xl"}>Sign Up</legend>
-          <FormField
-            control={form.control}
-            name={"email"}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder={"example@test.com"} {...field} />
-                </FormControl>
-                <FormDescription>Your email address</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"password"}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <div
-                    className={"relative flex w-full items-center space-x-2"}
-                  >
+    <Card className="w-screen max-w-lg mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardDescription>
+          Use your credentials to login securely.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={
+              "flex flex-col w-full max-w-screen-lg space-y-2 justify-center gap-2.5"
+            }
+          >
+            <FormField
+              control={form.control}
+              name={"email"}
+              render={({ field }) => (
+                <FormItem className="grid gap-2">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder={"example@test.com"} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={"password"}
+              render={({ field }) => (
+                <FormItem className="grid gap-2">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <div
+                      className={"relative flex w-full items-center space-x-2"}
+                    >
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder={"Password"}
+                        {...field}
+                      />
+                      <div
+                        className={"absolute right-2 cursor-pointer"}
+                        onClick={togglePasswordVisibility}
+                      >
+                        {showPassword ? (
+                          <EyeOff className={"w-5 h-5"} />
+                        ) : (
+                          <Eye className={"w-5 h-5"} />
+                        )}
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={"confirm"}
+              render={({ field }) => (
+                <FormItem className="grid gap-2">
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
                     <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder={"Password"}
+                      type={"password"}
+                      placeholder={"Confirm Password"}
                       {...field}
                     />
-                    <div
-                      className={"absolute right-2 cursor-pointer"}
-                      onClick={togglePasswordVisibility}
-                    >
-                      {showPassword ? (
-                        <EyeOff className={"w-5 h-5"} />
-                      ) : (
-                        <Eye className={"w-5 h-5"} />
-                      )}
-                    </div>
-                  </div>
-                </FormControl>
-                <FormDescription>Please enter a valid password</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"confirm"}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type={"password"}
-                    placeholder={"Confirm Password"}
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>Passwords must match.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button className={"w-full"} type={"submit"}>
-            Submit
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type={"submit"}>Submit</Button>
+          </form>
+          <Separator>OR</Separator>
+          <Button
+            fullWidth={true}
+            variant={"outline"}
+            onClick={logGoogleUser}
+            type={"button"}
+          >
+            <Google /> Continue with Google
           </Button>
-        </form>
-      </Form>
-      <Separator className={"my-4"} />
-      <Button className={"w-full"} onClick={logGoogleUser}>
-        <Google /> Continue with Google
-      </Button>
-      <p className={"w-full text-center font-bold my-3"}>OR</p>
-      <p>
-        <span className={"font-bold"}>Have an account? </span>
-        <Link
-          href={"/signin"}
-          className={"text-sm text-muted-foreground hover:underline"}
-        >
-          Sign-in{" "}
-        </Link>
-        here.
-      </p>
+          <p className="text-sm text-center mt-2">
+            <span className={"font-bold"}>Have an account? </span>
+            <Link
+              href={"/signin"}
+              className={"text-muted-foreground hover:underline"}
+            >
+              Sign-in{" "}
+            </Link>
+            here.
+          </p>
+        </Form>
+      </CardContent>
     </Card>
   );
 };
