@@ -27,6 +27,7 @@ import userStore from "@/stores/userStore";
 import { Eye, EyeOff } from "lucide-react";
 import { Google } from "@mui/icons-material";
 import { Separator } from "@/components/ui/separator";
+import { User } from "@/types/user";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -44,7 +45,7 @@ const SignIn = () => {
 
   const logGoogleUser = async () => {
     const response = await signInWithGoogle();
-    signIn(response.user);
+    signIn(response.user as User);
     router.push("/");
   };
 
@@ -134,7 +135,7 @@ const SignIn = () => {
             Continue With Google
           </Button>
           <p className="text-center text-sm mt-2">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/signup"
               className="text-muted-foreground hover:underline"

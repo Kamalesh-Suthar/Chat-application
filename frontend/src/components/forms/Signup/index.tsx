@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -58,9 +57,10 @@ const SignUp = () => {
       });
       return response;
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       if (res.status === 200) {
-        signIn(res.json());
+        const userData = await res.json();
+        signIn(userData);
         router.replace("/");
       }
     },

@@ -7,7 +7,6 @@ import {
   Command,
   Frame,
   LifeBuoy,
-  Lightbulb,
   Map,
   Moon,
   PieChart,

@@ -29,7 +29,6 @@ import userStore from "@/stores/userStore";
 import { useState } from "react";
 import Alert from "@/components/helpers/Alert";
 import { useRouter } from "next/navigation";
-import { useTheme } from "@/providers/theme-provider";
 
 export function NavUser({
   user,
@@ -40,7 +39,6 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { theme, setTheme } = useTheme();
   const { isMobile } = useSidebar();
   const { signOut } = userStore();
   const router = useRouter();
