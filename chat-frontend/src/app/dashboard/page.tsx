@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import ThemeToggle from "@/components/theme/mode";
+import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,16 +6,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { ReactNode } from "react";
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
-export default function Page({ children }: { children: ReactNode }) {
+export default function Page() {
   return (
-    <>
+    <SidebarProvider>
       <AppSidebar />
-      <ThemeToggle />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
@@ -44,9 +45,8 @@ export default function Page({ children }: { children: ReactNode }) {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-          {children}
         </div>
       </SidebarInset>
-    </>
-  );
+    </SidebarProvider>
+  )
 }
