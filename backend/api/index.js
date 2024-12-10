@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Routes
 // const chatRoutes = require("./routes/chat");
-const User = require("../models/User");
+
 
 // Use routes
 // app.use("/chat", chatRoutes);

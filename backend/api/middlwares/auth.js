@@ -5,7 +5,8 @@ admin.initializeApp({
 });
 
 module.exports = (req, res, next) => {
-  const { provider } = req.cookies;
+	const { authToken } = req.cookies;
+  const { provider } = authToken ? JSON.parse(authToken) : { provider: null };
 
   if (provider === "google") {
     const idToken = req.headers.authorization.split("Bearer ")[1];
