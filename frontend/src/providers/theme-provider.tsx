@@ -35,46 +35,34 @@ export function ThemeProvider({
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
+  const handleChange = (event: MediaQueryListEvent) => {
+    const newTheme = event.matches ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem(storageKey, newTheme);
+  };
 
+useEffect(() => {
+  if (!mounted) return;
+  const storedTheme = localStorage.getItem(storageKey) as Theme;
+  if (storedTheme) {
+    setTheme(storedTheme);
+  } else {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      setTheme(event.matches ? "dark" : "light");
-    };
-
-    // Set the initial theme based on the user's preference
     setTheme(mediaQuery.matches ? "dark" : "light");
-
-    // Add the event listener
     mediaQuery.addEventListener("change", handleChange);
 
-    // Cleanup the event listener on component unmount
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
     };
-  }, [mounted, setTheme]);
+  }
+}, [mounted, storageKey, setTheme]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.localStorage) {
-      const storedTheme =
-        (localStorage.getItem(storageKey) as Theme) || defaultTheme;
-      setTheme(storedTheme);
-    }
-  }, [defaultTheme, storageKey]);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-
-    root.classList.remove("light", "dark");
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.add("light");
-    }
-  }, [theme]);
+useEffect(() => {
+  const root = window.document.documentElement;
+  root.classList.remove("light", "dark");
+  root.classList.add(theme);
+  localStorage.setItem(storageKey, theme);
+}, [theme, storageKey]);
 
   return (
     <ThemeProviderContext.Provider value={{ theme, setTheme }} {...props}>

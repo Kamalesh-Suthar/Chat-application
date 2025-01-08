@@ -38,6 +38,11 @@ const configureGoogleAuthProvider = () => {
 const provider = configureGoogleAuthProvider();
 const auth = getAuth();
 
+// if (process.env.NODE_ENV === "development") {
+//   const auth = getAuth(app);
+//   connectAuthEmulator(auth, "http://127.0.0.1:9099");
+// }
+
 // Function to sign in with Google
 const signInWithGoogle = () => signInWithPopup(auth, provider);
 

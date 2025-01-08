@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { queryClient } from "@/providers/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import Sidebar from "@/components/navigation/Sidebar";
+import { SpinnerProvider } from "@/providers/spinner-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,11 +21,13 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider>
-          <SidebarProvider>
-            <QueryClientProvider client={queryClient}>
-              <Sidebar>{children}</Sidebar>
-            </QueryClientProvider>
-          </SidebarProvider>
+          <SpinnerProvider>
+            <SidebarProvider>
+              <QueryClientProvider client={queryClient}>
+                <Sidebar>{children}</Sidebar>
+              </QueryClientProvider>
+            </SidebarProvider>
+          </SpinnerProvider>
         </ThemeProvider>
       </body>
     </html>

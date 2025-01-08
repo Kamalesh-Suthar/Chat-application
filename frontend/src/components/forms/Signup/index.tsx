@@ -31,6 +31,7 @@ import { useMutation } from "@tanstack/react-query";
 import { User } from "firebase/auth";
 import { endpoints } from "@/constants/api";
 import userStore from "@/stores/userStore";
+import { useSpinner } from "@/providers/spinner-provider";
 
 const formSchema = z
   .object({
@@ -44,6 +45,7 @@ const formSchema = z
   });
 
 const SignUp = () => {
+  const { toggleSpinner } = useSpinner();
   const router = useRouter();
   const { signIn } = userStore();
   const googleSignInMutation = useMutation({
@@ -58,7 +60,7 @@ const SignUp = () => {
       return response;
     },
     onSuccess: async (res) => {
-      if (res.status === 200) {
+      if (res.status === 201 || res.status === 200) {
         const userData = await res.json();
         signIn(userData);
         router.replace("/");
@@ -72,10 +74,15 @@ const SignUp = () => {
     setShowPassword((prev) => !prev);
   };
   const logGoogleUser = async () => {
-    const response = await signInWithGoogle();
-    if (response) {
-      const { user } = response;
-      googleSignInMutation.mutate(user);
+    try {
+      toggleSpinner();
+      const response = await signInWithGoogle();
+      if (response) {
+        const { user } = response;
+        googleSignInMutation.mutate(user);
+      }
+    } finally {
+      toggleSpinner();
     }
   };
 

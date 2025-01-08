@@ -17,10 +17,10 @@ const signInWithGoogle = async (req, res) => {
       // Combined token for existing user
       const token = JSON.stringify({
         uid: user.uid,
-        provider: user.providerId
+        provider: user.providerId,
       });
-      
-      res.cookie("authToken", token, cookieOptions);
+
+      res.cookie("auth-token", token, cookieOptions);
       res.status(200).json(user);
       return;
     }
@@ -38,10 +38,10 @@ const signInWithGoogle = async (req, res) => {
     // Combined token for new user
     const token = JSON.stringify({
       uid: newUser.uid,
-      provider: newUser.providerId
+      provider: newUser.providerId,
     });
-    
-    res.cookie("authToken", token, cookieOptions);
+
+    res.cookie("auth-token", token, cookieOptions);
     res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -49,4 +49,4 @@ const signInWithGoogle = async (req, res) => {
   }
 };
 
-export { signInWithGoogle };
+module.exports = { signInWithGoogle };
